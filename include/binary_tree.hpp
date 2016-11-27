@@ -121,7 +121,7 @@ public:
     BinaryTree() : root_node(NULL), tree_height(0) {}
     ~BinaryTree() {
         std::cout << "This is the Binary Tree destructor" << std::endl;
-        delete root_node;
+        delete_nodes(root_node);
     }
 
     // adds an element to the tree
@@ -154,6 +154,27 @@ public:
                     }
                 }
             }
+        }
+    }
+
+    void delete_nodes(node_ptr node) {
+        if(node != NULL) {
+            this->delete_nodes(node->next_left);
+            this->delete_nodes(node->next_right);
+            std::cout << "deleting node: " << *node << std::endl;
+            delete node;
+        }
+    }
+
+    void print_tree() {
+        print_tree(root_node);
+    }
+
+    void print_tree(node_ptr node) {
+        if(node != NULL) {
+            print_tree(node->next_left);
+            std::cout << *node << std::endl;
+            print_tree(node->next_right);
         }
     }
 
