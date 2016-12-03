@@ -16,7 +16,8 @@ class Node {
     friend BinaryTree<T>;
 public:
     // create an empty node with no next and only adding the item
-    Node(const T& it) : item(it), next_left(NULL), next_right(NULL) {}
+    Node(const T& it, const T& height) : item(it), next_left(NULL),
+            next_right(NULL), height(height), depth(0), bf(0) {}
 
     // create a new node with next nodes
     Node(const T& it, Node<T>* n_left, Node<T> n_right)
@@ -57,47 +58,7 @@ public:
         return out;
     }
 
-    // return information of the values from the node
-    T get_item() {
-        return item;
-    }
-
-    Node<T>* get_next_left() {
-        return next_left;
-    }
-
-    Node<T>* get_next_right() {
-        return next_right;
-    }
-
-    unsigned int get_height() {
-        return height;
-    }
-
-    unsigned int get_depth() {
-        return depth;
-    }
-
-    signed int get_bf() {
-        return bf;
-    }
 protected:
-    void set_item(T it) {
-        item = it;
-    }
-
-    void set_next_left(Node<T> n_left) {
-        next_left = n_left;
-    }
-
-    void set_next_right(Node<T>* n_right) {
-        next_right = n_right;
-    }
-
-    void set_next(Node<T>* n_left, Node<T>* n_right) {
-        set_next_left(n_left);
-        set_next_right(n_right);
-    }
 private:
     // item stored in the tree
     T item;
@@ -127,7 +88,7 @@ public:
     // adds an element to the tree
     void push_back(const T& element) {
         // create new node with element
-        node_ptr new_node = new Node<T>(element);
+        node_ptr new_node = new Node<T>(element, tree_height);
 
         if(root_node == NULL) {
             root_node = new_node;
@@ -157,6 +118,13 @@ public:
         }
     }
 
+    void set_height_depth(node_ptr node) {
+        if(node != NULL) {
+            set_height_depth(node->next_left);
+            set_height_depth(node->next_right);
+        }
+    }
+
     void delete_nodes(node_ptr node) {
         if(node != NULL) {
             this->delete_nodes(node->next_left);
@@ -176,10 +144,6 @@ public:
             std::cout << *node << std::endl;
             print_tree(node->next_right);
         }
-    }
-
-    Node<T> get_root() {
-        return *root_node;
     }
 private:
     // root of the tree
